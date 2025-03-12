@@ -55,6 +55,15 @@ const displayCategories = (categories) => {
 const displayVideos = (videos) => {
     const videoContainer = document.getElementById('video-container');
     videoContainer.innerHTML = "";
+    if(videos.length === 0){
+        videoContainer.innerHTML = `
+    <div class="md:col-span-full lg:col-span-full flex flex-col justify-center items-center">
+            <img class="w-40" src="./assets/Icon.png" alt="">
+            <h1 class="text-2xl font-bold">Oops!! Sorry, There is no content here</h1>
+        </div>
+    `
+    return; 
+    }
     videos.forEach(video => {
         const { category_id, video_id, thumbnail, title, authors, others, description } = video;
 
@@ -90,4 +99,4 @@ const displayVideos = (videos) => {
 }
 
 loadCategories();
-loadVideos(); 
+// loadVideos(); 
