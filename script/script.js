@@ -10,6 +10,15 @@ const loadVideos = () => {
         .then(data => displayVideos(data.videos))
 }
 
+const loadCategoriesVideo = (id) => {
+    const url = `https://openapi.programming-hero.com/api/phero-tube/category/${id}`
+    fetch(url)
+        .then(response => response.json())
+        .then(data => displayVideos(data.category))
+        .then(err => (err))
+};
+
+
 const displayCategories = (categories) => {
     const categoriesContainer = document.getElementById("category-container");
 
@@ -18,7 +27,7 @@ const displayCategories = (categories) => {
     categories.forEach(category => {
         const categoryDiv = document.createElement("div");
         categoryDiv.innerHTML = `
-        <button class="btn btn-small hover:bg-[#FF1F3D] hover:text-white">${category.category}</button>
+        <button onclick="loadCategoriesVideo(${category.category_id})" class="btn btn-small hover:bg-[#FF1F3D] hover:text-white">${category.category}</button>
         `;
         categoriesContainer.appendChild(categoryDiv)
     });
@@ -45,9 +54,9 @@ const displayCategories = (categories) => {
 // }
 const displayVideos = (videos) => {
     const videoContainer = document.getElementById('video-container');
-
+    videoContainer.innerHTML = "";
     videos.forEach(video => {
-        const { category_id, video_id, thumbnail, title, authors, others, description } = video; 
+        const { category_id, video_id, thumbnail, title, authors, others, description } = video;
 
         const videoDiv = document.createElement("div");
         videoDiv.innerHTML = `
@@ -74,9 +83,9 @@ const displayVideos = (videos) => {
                 </div>
             </div>
         </div>
-        `; 
+        `;
 
-    videoContainer.append(videoDiv)
+        videoContainer.append(videoDiv)
     });
 }
 
