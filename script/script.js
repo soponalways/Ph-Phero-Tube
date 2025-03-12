@@ -1,3 +1,9 @@
+function removeActiveClass (){
+    const activeButtons = document.getElementsByClassName("active"); 
+    for(const btn of activeButtons){
+        btn.classList.remove("active")
+    }
+}
 const loadCategories = () => {
     fetch("https://openapi.programming-hero.com/api/phero-tube/categories")
         .then(res => res.json())
@@ -7,14 +13,23 @@ const loadCategories = () => {
 const loadVideos = () => {
     fetch("https://openapi.programming-hero.com/api/phero-tube/videos")
         .then(response => response.json())
-        .then(data => displayVideos(data.videos))
+        .then(data => {
+            removeActiveClass(); 
+            document.getElementById("btn-all").classList.add("active"); 
+            return displayVideos(data.videos)
+        })
 }
 
 const loadCategoriesVideo = (id) => {
     const url = `https://openapi.programming-hero.com/api/phero-tube/category/${id}`
     fetch(url)
         .then(response => response.json())
-        .then(data => displayVideos(data.category))
+        .then(data => {
+            removeActiveClass(); 
+            const clickedButton = document.getElementById(`btn-${id}`); 
+            clickedButton.classList.add("active")
+            return displayVideos(data.category); 
+        })
         .then(err => (err))
 };
 
@@ -27,7 +42,7 @@ const displayCategories = (categories) => {
     categories.forEach(category => {
         const categoryDiv = document.createElement("div");
         categoryDiv.innerHTML = `
-        <button onclick="loadCategoriesVideo(${category.category_id})" class="btn btn-small hover:bg-[#FF1F3D] hover:text-white">${category.category}</button>
+        <button id="btn-${category.category_id}" onclick="loadCategoriesVideo(${category.category_id})" class="btn btn-small">${category.category}</button>
         `;
         categoriesContainer.appendChild(categoryDiv)
     });
@@ -57,7 +72,7 @@ const displayVideos = (videos) => {
     videoContainer.innerHTML = "";
     if(videos.length === 0){
         videoContainer.innerHTML = `
-    <div class="md:col-span-full lg:col-span-full flex flex-col justify-center items-center">
+    <div class="py-20 md:col-span-full lg:col-span-full flex flex-col justify-center items-center">
             <img class="w-40" src="./assets/Icon.png" alt="">
             <h1 class="text-2xl font-bold">Oops!! Sorry, There is no content here</h1>
         </div>
