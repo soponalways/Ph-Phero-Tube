@@ -1,6 +1,6 @@
-function removeActiveClass (){
-    const activeButtons = document.getElementsByClassName("active"); 
-    for(const btn of activeButtons){
+function removeActiveClass() {
+    const activeButtons = document.getElementsByClassName("active");
+    for (const btn of activeButtons) {
         btn.classList.remove("active")
     }
 }
@@ -14,8 +14,8 @@ const loadVideos = () => {
     fetch("https://openapi.programming-hero.com/api/phero-tube/videos")
         .then(response => response.json())
         .then(data => {
-            removeActiveClass(); 
-            document.getElementById("btn-all").classList.add("active"); 
+            removeActiveClass();
+            document.getElementById("btn-all").classList.add("active");
             return displayVideos(data.videos)
         })
 }
@@ -25,13 +25,41 @@ const loadCategoriesVideo = (id) => {
     fetch(url)
         .then(response => response.json())
         .then(data => {
-            removeActiveClass(); 
-            const clickedButton = document.getElementById(`btn-${id}`); 
+            removeActiveClass();
+            const clickedButton = document.getElementById(`btn-${id}`);
             clickedButton.classList.add("active")
-            return displayVideos(data.category); 
+            return displayVideos(data.category);
         })
         .then(err => (err))
 };
+
+
+function loadVideoDetails(video_id) {
+    const url = `https://openapi.programming-hero.com/api/phero-tube/video/${video_id}`;
+    console.log(url);
+    fetch(url)
+        .then(response => response.json())
+        .then(data => displayVideoDetails(data.video))
+};
+
+const displayVideoDetails = (video) => {
+    // console.log(document.getElementById("video_details"));
+    document.getElementById("video_details").showModal();
+    const detailsContainer = document.getElementById("details-container");
+    detailsContainer.innerHTML = `
+        <div class="card bg-base-100 image-full shadow-sm">
+            <figure>
+                <img
+                src="${video.thumbnail}"
+                alt="Shoes" />
+            </figure>
+        <div class="card-body">
+            <h2 class="card-title">${video.title}</h2>
+            <p>A card component has a figure, a body part, and inside body there are title and actions parts</p>
+        </div>
+</div>
+    `
+}
 
 
 const displayCategories = (categories) => {
@@ -70,14 +98,14 @@ const displayCategories = (categories) => {
 const displayVideos = (videos) => {
     const videoContainer = document.getElementById('video-container');
     videoContainer.innerHTML = "";
-    if(videos.length === 0){
+    if (videos.length === 0) {
         videoContainer.innerHTML = `
     <div class="py-20 md:col-span-full lg:col-span-full flex flex-col justify-center items-center">
             <img class="w-40" src="./assets/Icon.png" alt="">
             <h1 class="text-2xl font-bold">Oops!! Sorry, There is no content here</h1>
         </div>
     `
-    return; 
+        return;
     }
     videos.forEach(video => {
         const { category_id, video_id, thumbnail, title, authors, others, description } = video;
@@ -106,6 +134,7 @@ const displayVideos = (videos) => {
                     <p class="text-[#17171770]">${others.views} views</p>
                 </div>
             </div>
+            <button onclick=loadVideoDetails("${video_id}") class="btn btn-block">Show Details</button>
         </div>
         `;
 
