@@ -1,3 +1,11 @@
+const showLoader = () => {
+    document.getElementById("loading").classList.remove("hidden"); 
+    document.getElementById('video-container').classList.add("hidden")
+}
+const hideLoader = () => {
+    document.getElementById("loading").classList.add("hidden"); 
+    document.getElementById('video-container').classList.remove("hidden")
+}
 function removeActiveClass() {
     const activeButtons = document.getElementsByClassName("active");
     for (const btn of activeButtons) {
@@ -11,6 +19,7 @@ const loadCategories = () => {
 };
 
 const loadVideos = (searchText = "") => {
+    showLoader(); 
     fetch(`https://openapi.programming-hero.com/api/phero-tube/videos?title=${searchText}`)
         .then(response => response.json())
         .then(data => {
@@ -21,6 +30,7 @@ const loadVideos = (searchText = "") => {
 }
 
 const loadCategoriesVideo = (id) => {
+    showLoader();
     const url = `https://openapi.programming-hero.com/api/phero-tube/category/${id}`
     fetch(url)
         .then(response => response.json())
@@ -36,7 +46,6 @@ const loadCategoriesVideo = (id) => {
 
 function loadVideoDetails(video_id) {
     const url = `https://openapi.programming-hero.com/api/phero-tube/video/${video_id}`;
-    console.log(url);
     fetch(url)
         .then(response => response.json())
         .then(data => displayVideoDetails(data.video))
@@ -99,6 +108,7 @@ const displayCategories = (categories) => {
 //     "description": "Dive into the rhythm of 'Shape of You,' a captivating track that blends pop sensibilities with vibrant beats. Created by Olivia Mitchell, this song has already gained 100K views since its release. With its infectious melody and heartfelt lyrics, 'Shape of You' is perfect for fans looking for an uplifting musical experience. Let the music take over as Olivia's vocal prowess and unique style create a memorable listening journey."
 // }
 const displayVideos = (videos) => {
+    // showLoader();
     const videoContainer = document.getElementById('video-container');
     videoContainer.innerHTML = "";
     if (videos.length === 0) {
@@ -108,6 +118,7 @@ const displayVideos = (videos) => {
             <h1 class="text-2xl font-bold">Oops!! Sorry, There is no content here</h1>
         </div>
     `
+    hideLoader(); 
         return;
     }
     videos.forEach(video => {
@@ -141,7 +152,8 @@ const displayVideos = (videos) => {
         </div>
         `;
 
-        videoContainer.append(videoDiv)
+        videoContainer.append(videoDiv);
+        hideLoader(); 
     });
 }; 
 
