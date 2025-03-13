@@ -10,8 +10,8 @@ const loadCategories = () => {
         .then(data => displayCategories(data.categories))
 };
 
-const loadVideos = () => {
-    fetch("https://openapi.programming-hero.com/api/phero-tube/videos")
+const loadVideos = (searchText = "") => {
+    fetch(`https://openapi.programming-hero.com/api/phero-tube/videos?title=${searchText}`)
         .then(response => response.json())
         .then(data => {
             removeActiveClass();
@@ -54,8 +54,11 @@ const displayVideoDetails = (video) => {
                 alt="Shoes" />
             </figure>
         <div class="card-body">
+            <h2 class="font-bold text-xl">Owner: ${video.authors[0].profile_name}</h2>
+            <p>views: ${video.others.views} ${video.authors[0].verified === true ? `<img class="w-5" src="https://img.icons8.com/?size=96&id=FNbnqlDTjR45&format=gif" alt="">` : ""}</p>
+            <p>Post on: ${video.others.posted_date}</p>
             <h2 class="card-title">${video.title}</h2>
-            <p>A card component has a figure, a body part, and inside body there are title and actions parts</p>
+            <p>${video.description}</p>
         </div>
 </div>
     `
@@ -127,9 +130,9 @@ const displayVideos = (videos) => {
                 </div>
                 <div class="intro space-y-2 pb-2">
                     <h2 class="text-lg font-bold">${title}</h2>
-                    <div class="flex justify-start">
+                    <div class="flex justify-start gap-3">
                         <p class="text-[#17171770]">${authors[0].profile_name}</p>
-                        <img class="w-5" src="https://img.icons8.com/?size=96&id=FNbnqlDTjR45&format=gif" alt="">
+                        <p>${video.authors[0].verified === true ? `<img class="w-5" src="https://img.icons8.com/?size=96&id=FNbnqlDTjR45&format=gif" alt="">` : ``}</p>
                     </div>
                     <p class="text-[#17171770]">${others.views} views</p>
                 </div>
@@ -140,7 +143,12 @@ const displayVideos = (videos) => {
 
         videoContainer.append(videoDiv)
     });
-}
+}; 
+
+document.getElementById("search-input").addEventListener("keyup", (e) => {
+    const value = (e.target.value);
+    loadVideos(value)
+})
 
 loadCategories();
 // loadVideos(); 
